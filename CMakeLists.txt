@@ -74,6 +74,7 @@ endif()
 
 option(WEBSOCKETS "Enable websockets support" OFF)
 option(MYSQL "Enable mysql support" OFF)
+option(FFMPEG "Enable video support via ffmpeg" OFF)
 option(CLIENT "Compile client" ON)
 option(DOWNLOAD_GTEST "Download and compile GTest" ${AUTO_DEPENDENCIES_DEFAULT})
 option(PREFER_BUNDLED_LIBS "Prefer bundled libraries over system libraries" ${AUTO_DEPENDENCIES_DEFAULT})
@@ -281,6 +282,7 @@ find_package(Opusfile)
 find_package(Pnglite)
 find_package(PythonInterp)
 find_package(SDL2)
+find_package(ffmpeg)
 find_package(Threads)
 find_package(Wavpack)
 if(WEBSOCKETS)
@@ -498,6 +500,7 @@ set(COPY_FILES
   ${FREETYPE_COPY_FILES}
   ${OPUSFILE_COPY_FILES}
   ${SDL2_COPY_FILES}
+  ${FFMPEG_COPY_FILES}
 )
 file(COPY ${COPY_FILES} DESTINATION .)
 
@@ -662,6 +665,8 @@ set_glob(ENGINE_SHARED GLOB src/engine/shared
   teehistorian_ex_chunks.h
   uuid_manager.cpp
   uuid_manager.h
+  video.cpp
+  video.h
   websockets.cpp
   websockets.h
 )
@@ -735,6 +740,8 @@ if(CLIENT)
     text.cpp
     updater.cpp
     updater.h
+    video.cpp
+    video.h
   )
   set_glob(GAME_CLIENT GLOB_RECURSE src/game/client
     animstate.cpp
@@ -848,6 +855,7 @@ if(CLIENT)
     ${PNGLITE_LIBRARIES}
     ${SDL2_LIBRARIES}
     ${WAVPACK_LIBRARIES}
+    ${FFMPEG_LIBRARIES}
 
     # Order of these three is important.
     ${OPUSFILE_LIBRARIES}
@@ -890,6 +898,7 @@ if(CLIENT)
     ${PNGLITE_INCLUDE_DIRS}
     ${SDL2_INCLUDE_DIRS}
     ${WAVPACK_INCLUDE_DIRS}
+    ${FFMPEG_INCLUDE_DIRS}
   )
 
   set(PARAMS "${WAVPACK_INCLUDE_DIRS};${WAVPACK_INCLUDE_DIRS}")
@@ -1522,6 +1531,9 @@ foreach(target ${TARGETS_OWN})
   if(WEBSOCKETS)
     target_compile_definitions(${target} PRIVATE CONF_WEBSOCKETS)
     target_include_directories(${target} PRIVATE ${WEBSOCKETS_INCLUDE_DIRS})
+  endif()
+  if(FFMPEG)
+    target_compile_definitions(${target} PRIVATE CONF_VIDEORECORDER)
   endif()
   if(MYSQL)
     target_compile_definitions(${target} PRIVATE CONF_SQL)
