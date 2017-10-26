@@ -119,7 +119,7 @@ private:
 	void ScanFile();
 	int NextFrame();
 
-	const int64 time();
+	int64 time();
 
 	int64 m_TickTime;
 	int64 m_Time;
