@@ -271,6 +271,7 @@ public:
 	virtual bool DummyConnecting();
 	int m_DummyConnected;
 	int m_LastDummyConnectTime;
+	bool m_DemoRender = false;
 
 	virtual void GetServerInfo(CServerInfo *pServerInfo);
 	void ServerInfoRequest();
@@ -371,7 +372,7 @@ public:
 
 	void RegisterCommands();
 
-	const char *DemoPlayer_Play(const char *pFilename, int StorageType);
+	const char *DemoPlayer_Play(const char *pFilename, int StorageType, bool DemoRender);
 	void DemoRecorder_Start(const char *pFilename, bool WithTimestamp, int Recorder);
 	void DemoRecorder_HandleAutoStart();
 	void DemoRecorder_Stop(int Recorder);
