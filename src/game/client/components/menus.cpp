@@ -1140,6 +1140,7 @@ int CMenus::Render()
 			pExtraText = "";
 			ExtraAlign = -1;
 		}
+	#if defined(CONF_VIDEORECORDER)
 		else if(m_Popup == POPUP_RENDER_DEMO)
 		{
 			pTitle = Localize("Render demo");
@@ -1152,6 +1153,7 @@ int CMenus::Render()
 			pExtraText = Localize("Destination file exists, Do you want to replace it?");
 			ExtraAlign = -1;
 		}
+	#endif
 		else if(m_Popup == POPUP_REMOVE_FRIEND)
 		{
 			pTitle = Localize("Remove friend");
@@ -1587,6 +1589,7 @@ int CMenus::Render()
 			static float Offset = 0.0f;
 			DoEditBox(&Offset, &TextBox, m_aCurrentDemoFile, sizeof(m_aCurrentDemoFile), 12.0f, &Offset);
 		}
+#if defined(CONF_VIDEORECORDER)
 		else if(m_Popup == POPUP_RENDER_DEMO)
 		{
 			CUIRect Label, TextBox, Ok, Abort;
@@ -1688,6 +1691,7 @@ int CMenus::Render()
 					PopupMessage(Localize("Error"), str_comp(pError, "error loading demo") ? pError : Localize("Error loading demo"), Localize("Ok"));
 			}
 		}
+#endif
 		else if(m_Popup == POPUP_REMOVE_FRIEND)
 		{
 			CUIRect Yes, No;

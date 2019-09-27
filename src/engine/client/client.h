@@ -347,6 +347,7 @@ public:
 	static void StartVideo(IConsole::IResult *pResult, void *pUserData, const char *pVideName);
 	static void Con_StartVideo(IConsole::IResult *pResult, void *pUserData);
 	static void Con_StopVideo(IConsole::IResult *pResult, void *pUserData);
+	const char *DemoPlayer_Render(const char *pFilename, int StorageType, const char *pVideoName);
 #endif
 
 	static void Con_Rcon(IConsole::IResult *pResult, void *pUserData);
@@ -373,7 +374,6 @@ public:
 	void RegisterCommands();
 
 	const char *DemoPlayer_Play(const char *pFilename, int StorageType);
-	const char *DemoPlayer_Render(const char *pFilename, int StorageType, const char *pVideoName);
 	void DemoRecorder_Start(const char *pFilename, bool WithTimestamp, int Recorder);
 	void DemoRecorder_HandleAutoStart();
 	void DemoRecorder_Stop(int Recorder);

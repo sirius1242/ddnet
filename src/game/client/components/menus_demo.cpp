@@ -782,7 +782,11 @@ void CMenus::RenderDemoList(CUIRect MainView)
 	RenderTools()->DrawUIRect(&MainView, ms_ColorTabbarActive, CUI::CORNER_ALL, 10.0f);
 	MainView.Margin(10.0f, &MainView);
 
+#if defined(CONF_VIDEORECORDER)
 	CUIRect ButtonBar, RefreshRect, PlayRect, DeleteRect, RenameRect, RenderRect, ListBox;
+#else
+	CUIRect ButtonBar, RefreshRect, PlayRect, DeleteRect, RenameRect, ListBox;
+#endif
 	MainView.HSplitBottom(ms_ButtonHeight+5.0f, &MainView, &ButtonBar);
 	ButtonBar.HSplitTop(5.0f, 0, &ButtonBar);
 	ButtonBar.VSplitRight(130.0f, &ButtonBar, &PlayRect);
@@ -791,8 +795,10 @@ void CMenus::RenderDemoList(CUIRect MainView)
 	ButtonBar.VSplitLeft(120.0f, &DeleteRect, &ButtonBar);
 	ButtonBar.VSplitLeft(10.0f, 0, &ButtonBar);
 	ButtonBar.VSplitLeft(120.0f, &RenameRect, &ButtonBar);
+#if defined(CONF_VIDEORECORDER)
 	ButtonBar.VSplitLeft(10.0f, 0, &ButtonBar);
 	ButtonBar.VSplitLeft(110.0f, &RenderRect, &ButtonBar);
+#endif
 	MainView.HSplitBottom(140.0f, &ListBox, &MainView);
 
 	// render demo info
@@ -1212,27 +1218,18 @@ void CMenus::RenderDemoList(CUIRect MainView)
 			}
 		}
 
+#if defined(CONF_VIDEORECORDER)
 		static int s_RenderButton = 0;
 		if(DoButton_Menu(&s_RenderButton, Localize("Render"), 0, &RenderRect))
 		{
 			if(m_DemolistSelectedIndex >= 0)
 			{
-				//char aBuf[512];
-				//str_format(aBuf, sizeof(aBuf), "%s/%s", m_aCurrentDemoFolder, m_lDemos[m_DemolistSelectedIndex].m_aFilename);
 				UI()->SetActiveItem(0);
 				m_Popup = POPUP_RENDER_DEMO;
 				str_copy(m_aCurrentDemoFile, m_lDemos[m_DemolistSelectedIndex].m_aFilename, sizeof(m_aCurrentDemoFile));
 				return;
 			}
-			/*
-			if(m_DemolistSelectedIndex >= 0)
-			{
-				UI()->SetActiveItem(0);
-				m_Popup = POPUP_RENDER_DEMO;
-				str_copy(m_aCurrentDemoFile, m_lDemos[m_DemolistSelectedIndex].m_aFilename, sizeof(m_aCurrentDemoFile));
-				return;
-			}
-			*/
 		}
+#endif
 	}
 }
