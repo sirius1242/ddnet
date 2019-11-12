@@ -10,10 +10,11 @@ addons:
     - libfreetype6-dev
     - libgtest-dev
     - libsdl2-dev
+    - ffmpeg
 script:
 - python scripts/check_header_guards.py
-- if [ "$TRAVIS_OS_NAME" = "osx" ]; then CMAKE_EXTRA_ARGS="-DDOWNLOAD_GTEST=ON -DDEV=ON"; fi
-- if [ "$TRAVIS_OS_NAME" != "osx" ]; then CMAKE_EXTRA_ARGS="-DGTEST_LIBRARY=../gtest_build/libgtest.a -DGTEST_MAIN_LIBRARY=../gtest_build/libgtest_main.a"; mkdir gtest_build; cmake -E chdir gtest_build cmake /usr/src/gtest; cmake --build gtest_build; fi
+- if [ "$TRAVIS_OS_NAME" = "osx" ]; then CMAKE_EXTRA_ARGS="-DDOWNLOAD_GTEST=ON -DDEV=ON -DFFMPEG=ON"; fi
+- if [ "$TRAVIS_OS_NAME" != "osx" ]; then CMAKE_EXTRA_ARGS="-DGTEST_LIBRARY=../gtest_build/libgtest.a -DGTEST_MAIN_LIBRARY=../gtest_build/libgtest_main.a -DFFMPEG=ON"; mkdir gtest_build; cmake -E chdir gtest_build cmake /usr/src/gtest; cmake --build gtest_build; fi
 - mkdir build; cd build
 - cmake -Werror=dev -DCMAKE_INSTALL_PREFIX=/usr $CMAKE_EXTRA_ARGS ..
 - make everything
@@ -33,3 +34,13 @@ branches:
   except:
   - staging.tmp
   - testing.tmp
+deploy:
+  provider: releases
+  api_key: ${GH_TOKEN}
+  file:
+    - build/DDNet
+    - data/**/*
+  skip_cleanup: true
+  draft: true
+  on:
+    tags: true
