@@ -33,6 +33,7 @@ script:
 - make run_tests
 - cd ..
 - build/DDNet-Server shutdown
+- mkdir DDNet-Demorecorder-"$TRAVIS_OS_NAME"; cp build/DDNet build/DDNet-Server build/config_retrieve build/config_store build/dilate build/map_diff build/map_extract autoexec_server.cfg license.txt storage.cfg DDNet-Demorecorder-"$TRAVIS_OS_NAME"; cp -r data DDNet-Demorecorder-"$TRAVIS_OS_NAME"; tar -cJvf DDNet-Demorecorder-"$TRAVIS_OS_NAME".tar.xz DDNet-Demorecorder-"$TRAVIS_OS_NAME";
 env:
   global:
   - CFLAGS="-Wdeclaration-after-statement -Werror"
@@ -45,8 +46,7 @@ deploy:
   provider: releases
   api_key: ${GH_TOKEN}
   file:
-    - build/DDNet
-    - data/**/*
+    - DDNet-Demorecorder-"$TRAVIS_OS_NAME".tar.xz 
   skip_cleanup: true
   draft: true
   on:
