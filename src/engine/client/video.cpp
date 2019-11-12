@@ -644,6 +644,7 @@ void CVideo::add_stream(OutputStream *ost, AVFormatContext *oc, AVCodec **codec,
 void CVideo::write_frame(OutputStream* pStream)
 {
 
+	int ret_send = 0;
 	int ret_recv = 0;
 
 	AVPacket Packet = { 0 };
