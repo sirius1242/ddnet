@@ -644,7 +644,6 @@ void CVideo::add_stream(OutputStream *ost, AVFormatContext *oc, AVCodec **codec,
 void CVideo::write_frame(OutputStream* pStream)
 {
 
-	int ret_send = 0;
 	int ret_recv = 0;
 
 	AVPacket Packet = { 0 };
@@ -653,7 +652,7 @@ void CVideo::write_frame(OutputStream* pStream)
 	Packet.data = 0;
 	Packet.size = 0;
 
-	ret_send = avcodec_send_frame(pStream->enc, pStream->frame);
+	avcodec_send_frame(pStream->enc, pStream->frame);
 	do
 	{
 		ret_recv = avcodec_receive_packet(pStream->enc, &Packet);
@@ -683,7 +682,7 @@ void CVideo::write_frame(OutputStream* pStream)
 void CVideo::finish_frames(OutputStream* pStream)
 {
 	dbg_msg("video_recorder", "------------");
-	int ret_send, ret_recv = 0;
+	int ret_recv = 0;
 
 	AVPacket Packet = { 0 };
 
@@ -691,7 +690,7 @@ void CVideo::finish_frames(OutputStream* pStream)
 	Packet.data = 0;
 	Packet.size = 0;
 
-	ret_send = avcodec_send_frame(pStream->enc, 0);
+	avcodec_send_frame(pStream->enc, 0);
 	do
 	{
 		ret_recv = avcodec_receive_packet(pStream->enc, &Packet);
