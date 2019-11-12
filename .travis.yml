@@ -46,7 +46,7 @@ deploy:
   provider: releases
   api_key: ${GH_TOKEN}
   file:
-    - DDNet-Demorecorder-"$TRAVIS_OS_NAME".tar.xz 
+    - ${TRAVIS_BUILD_DIR}/DDNet-Demorecorder-"$TRAVIS_OS_NAME".tar.xz 
   skip_cleanup: true
   draft: true
   on:
