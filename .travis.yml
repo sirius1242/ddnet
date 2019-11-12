@@ -15,7 +15,7 @@ addons:
     - libavutil-dev
     - libswscale-dev
     - libswresample-dev
--before_install:
+before_install:
     - if [ "$TRAVIS_OS_NAME" == "osx" ]; then brew update; fi
     - if [ "$TRAVIS_OS_NAME" == "osx" ]; then brew install ffmpeg; fi
 script:
