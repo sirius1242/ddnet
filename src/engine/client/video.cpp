@@ -345,7 +345,8 @@ void CVideo::fill_video_frame()
 
 void CVideo::read_rgb_from_gl()
 {
-	size_t i, j, k, cur_gl, cur_rgb, nvals;
+	int i, j, k;
+	size_t cur_gl, cur_rgb, nvals;
 	const size_t format_nchannels = 3;
 	nvals = format_nchannels * m_Width * m_Height;
 	m_pPixels = (uint8_t *)realloc(m_pPixels, nvals * sizeof(GLubyte));
