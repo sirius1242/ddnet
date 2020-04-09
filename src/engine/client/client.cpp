@@ -2956,6 +2956,18 @@ void CClient::Run()
 			m_aCmdPlayDemo[0] = 0;
 		}
 
+#if defined(CONF_VIDEORECORDER)
+		// handle pending demo play
+		if(m_aCmdRenderVideo[0][0])
+		{
+			const char *pError = DemoPlayer_Render(m_aCmdRenderVideo[0], IStorage::TYPE_ABSOLUTE, m_aCmdRenderVideo[1], 1.0);
+			if(pError)
+				dbg_msg("demo_player", "playing passed demo file '%s' failed: %s", m_aCmdPlayDemo, pError);
+			m_aCmdRenderVideo[0][0] = 0;
+			m_aCmdRenderVideo[1][0] = 0;
+		}
+#endif
+
 		// progress on dummy connect if security token handshake skipped/passed
 		if(m_DummySendConnInfo && !m_NetClient[CLIENT_DUMMY].SecurityTokenUnknown())
 		{
@@ -3916,6 +3928,14 @@ void CClient::HandleDemoPath(const char *pPath)
 	str_copy(m_aCmdPlayDemo, pPath, sizeof(m_aCmdPlayDemo));
 }
 
+#if defined(CONF_VIDEORECORDER)
+void CClient::HandleVideoPath(const char *pPath, const char *pVPath)
+{
+	str_copy(m_aCmdRenderVideo[0], pPath, sizeof(m_aCmdRenderVideo[0]));
+	str_copy(m_aCmdRenderVideo[1], pVPath, sizeof(m_aCmdRenderVideo[1]));
+}
+#endif
+
 /*
 	Server Time
 	Client Mirror Time
@@ -4064,6 +4084,10 @@ int main(int argc, const char **argv) // ignore_convention
 		pClient->HandleConnectLink(argv[1]);
 	else if(argc == 2 && str_endswith(argv[1], ".demo"))
 		pClient->HandleDemoPath(argv[1]);
+#if defined(CONF_VIDEORECORDER)
+	else if(argc == 3 && str_endswith(argv[1], ".demo") && str_endswith(argv[2], ".mp4"))
+		pClient->HandleVideoPath(argv[1], argv[2]);
+#endif
 	else if(argc > 1) // ignore_convention
 		pConsole->ParseArguments(argc-1, &argv[1]); // ignore_convention
 

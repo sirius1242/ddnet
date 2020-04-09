@@ -148,6 +148,9 @@ class CClient : public IClient, public CDemoPlayer::IListener
 	//
 	char m_aCmdConnect[256];
 	char m_aCmdPlayDemo[MAX_PATH_LENGTH];
+#if defined(CONF_VIDEORECORDER)
+	char m_aCmdRenderVideo[2][MAX_PATH_LENGTH];
+#endif
 
 	// map download
 	std::shared_ptr<CGetFile> m_pMapdownloadTask;
@@ -421,6 +424,7 @@ public:
 
 	void HandleConnectLink(const char *pLink);
 	void HandleDemoPath(const char *pPath);
+	void HandleVideoPath(const char *pPath, const char *pVPath);
 
 	// gfx
 	void SwitchWindowScreen(int Index);
