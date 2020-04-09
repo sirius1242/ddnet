@@ -2507,8 +2507,6 @@ void CClient::Update()
 		if (IVideo::Current()->aframeRendered())
 			IVideo::Current()->nextAudioFrame_timeline();
 	}
-	else if(m_CmdRender)
-		Quit();
 	else if(m_ButtonRender)
 		Disconnect();
 #endif
@@ -2529,6 +2527,10 @@ void CClient::Update()
 		{
 			// disconnect on error
 			Disconnect();
+#if defined(CONF_VIDEORECORDER)
+			if(m_CmdRender)
+				Quit();
+#endif
 		}
 	}
 	else if(State() == IClient::STATE_ONLINE && m_ReceivedSnapshots[g_Config.m_ClDummy] >= 3)
