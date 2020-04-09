@@ -131,6 +131,7 @@ class CClient : public IClient, public CDemoPlayer::IListener
 	char m_Password[32];
 	bool m_SendPassword;
 	bool m_ButtonRender=false;
+	bool m_CmdRender=false;
 
 	// version-checking
 	char m_aVersionStr[10];
@@ -373,10 +374,10 @@ public:
 	static void Con_Screenshot(IConsole::IResult *pResult, void *pUserData);
 
 #if defined(CONF_VIDEORECORDER)
-	static void StartVideo(IConsole::IResult *pResult, void *pUserData, const char *pVideName);
+	static void StartVideo(IConsole::IResult *pResult, void *pUserData, const char *pVideName, int StorageType);
 	static void Con_StartVideo(IConsole::IResult *pResult, void *pUserData);
 	static void Con_StopVideo(IConsole::IResult *pResult, void *pUserData);
-	const char *DemoPlayer_Render(const char *pFilename, int StorageType, const char *pVideoName, int SpeedIndex);
+	const char *DemoPlayer_Render(const char *pFilename, int StorageType, const char *pVideoName, int VStorageType, int SpeedIndex);
 #endif
 
 	static void Con_Rcon(IConsole::IResult *pResult, void *pUserData);

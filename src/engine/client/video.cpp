@@ -13,7 +13,7 @@
 const size_t format_nchannels = 3;
 static LOCK m_WriteLock = 0;
 
-CVideo::CVideo(CGraphics_Threaded* pGraphics, IStorage* pStorage, IConsole *pConsole, int width, int height, const char *name) :
+CVideo::CVideo(CGraphics_Threaded* pGraphics, IStorage* pStorage, int StorageType, IConsole *pConsole, int width, int height, const char *name) :
 	m_pGraphics(pGraphics),
 	m_pStorage(pStorage),
 	m_pConsole(pConsole),
@@ -54,6 +54,7 @@ CVideo::CVideo(CGraphics_Threaded* pGraphics, IStorage* pStorage, IConsole *pCon
 	ms_TickTime = time_freq() / m_FPS;
 	ms_pCurrentVideo = this;
 	m_WriteLock = lock_create();
+	m_StorageType = StorageType;
 }
 
 CVideo::~CVideo()
@@ -67,13 +68,16 @@ void CVideo::start()
 	char aDate[20];
 	str_timestamp(aDate, sizeof(aDate));
 	char aBuf[256];
-	if (strlen(m_Name) != 0)
+	if(m_StorageType == IStorage::TYPE_ABSOLUTE)
+		str_format(aBuf, sizeof(aBuf), "%s", m_Name);
+	else if (strlen(m_Name) != 0)
 		str_format(aBuf, sizeof(aBuf), "videos/%s", m_Name);
 	else
 		str_format(aBuf, sizeof(aBuf), "videos/%s.mp4", aDate);
-
 	char aWholePath[1024];
-	IOHANDLE File = m_pStorage->OpenFile(aBuf, IOFLAG_WRITE, IStorage::TYPE_SAVE, aWholePath, sizeof(aWholePath));
+	IOHANDLE File = m_pStorage->OpenFile(aBuf, IOFLAG_WRITE, m_StorageType, aWholePath, sizeof(aWholePath));
+	if(m_StorageType == IStorage::TYPE_ABSOLUTE)
+		str_format(aWholePath, sizeof(aWholePath), "%s", m_Name);
 
 	if(File)
 	{

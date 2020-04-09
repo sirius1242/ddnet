@@ -2507,6 +2507,8 @@ void CClient::Update()
 		if (IVideo::Current()->aframeRendered())
 			IVideo::Current()->nextAudioFrame_timeline();
 	}
+	else if(m_CmdRender)
+		Quit();
 	else if(m_ButtonRender)
 		Disconnect();
 #endif
@@ -2960,11 +2962,12 @@ void CClient::Run()
 		// handle pending demo play
 		if(m_aCmdRenderVideo[0][0])
 		{
-			const char *pError = DemoPlayer_Render(m_aCmdRenderVideo[0], IStorage::TYPE_ABSOLUTE, m_aCmdRenderVideo[1], 1.0);
+			const char *pError = DemoPlayer_Render(m_aCmdRenderVideo[0], IStorage::TYPE_ABSOLUTE, m_aCmdRenderVideo[1], IStorage::TYPE_ABSOLUTE, 4);
 			if(pError)
-				dbg_msg("demo_player", "playing passed demo file '%s' failed: %s", m_aCmdPlayDemo, pError);
+				dbg_msg("demo_player", "rendering passed demo file '%s' failed: %s", m_aCmdPlayDemo, pError);
 			m_aCmdRenderVideo[0][0] = 0;
 			m_aCmdRenderVideo[1][0] = 0;
+			m_CmdRender = true;
 		}
 #endif
 
@@ -3331,7 +3334,7 @@ void CClient::Con_StartVideo(IConsole::IResult *pResult, void *pUserData)
 
 	if (!IVideo::Current())
 	{
-		new CVideo((CGraphics_Threaded*)pSelf->m_pGraphics, pSelf->Storage(), pSelf->m_pConsole, pSelf->Graphics()->ScreenWidth(), pSelf->Graphics()->ScreenHeight(), pResult->GetString(0));
+		new CVideo((CGraphics_Threaded*)pSelf->m_pGraphics, pSelf->Storage(), IStorage::TYPE_SAVE, pSelf->m_pConsole, pSelf->Graphics()->ScreenWidth(), pSelf->Graphics()->ScreenHeight(), pResult->GetString(0));
 		IVideo::Current()->start();
 		bool paused = pSelf->m_DemoPlayer.Info()->m_Info.m_Paused;
 		if(paused)
@@ -3341,17 +3344,17 @@ void CClient::Con_StartVideo(IConsole::IResult *pResult, void *pUserData)
 		pSelf->m_pConsole->Print(IConsole::OUTPUT_LEVEL_STANDARD, "videorecorder", "Videorecorder already running.");
 }
 
-void CClient::StartVideo(IConsole::IResult *pResult, void *pUserData, const char *pVideoName)
+void CClient::StartVideo(IConsole::IResult *pResult, void *pUserData, const char *pVideoName, int StorageType)
 {
 	CClient *pSelf = (CClient *)pUserData;
 
 	if (pSelf->State() != IClient::STATE_DEMOPLAYBACK)
 		pSelf->m_pConsole->Print(IConsole::OUTPUT_LEVEL_STANDARD, "videorecorder", "Can not start videorecorder outside of demoplayer.");
 
-	pSelf->m_pConsole->Print(IConsole::OUTPUT_LEVEL_DEBUG, "demo_render", pVideoName);
+	dbg_msg("demo_render", "%s", pVideoName);
 	if (!IVideo::Current())
 	{
-		new CVideo((CGraphics_Threaded*)pSelf->m_pGraphics, pSelf->Storage(), pSelf->m_pConsole, pSelf->Graphics()->ScreenWidth(), pSelf->Graphics()->ScreenHeight(), pVideoName);
+		new CVideo((CGraphics_Threaded*)pSelf->m_pGraphics, pSelf->Storage(), StorageType, pSelf->m_pConsole, pSelf->Graphics()->ScreenWidth(), pSelf->Graphics()->ScreenHeight(), pVideoName);
 		IVideo::Current()->start();
 	}
 	else
@@ -3549,7 +3552,7 @@ const char *CClient::DemoPlayer_Play(const char *pFilename, int StorageType)
 }
 
 #if defined(CONF_VIDEORECORDER)
-const char *CClient::DemoPlayer_Render(const char *pFilename, int StorageType, const char *pVideoName, int SpeedIndex)
+const char *CClient::DemoPlayer_Render(const char *pFilename, int StorageType, const char *pVideoName, int VStorageType, int SpeedIndex)
 {
 	const char *pError;
 	pError = DemoPlayer_Play(pFilename, StorageType);
@@ -3557,7 +3560,7 @@ const char *CClient::DemoPlayer_Render(const char *pFilename, int StorageType, c
 		return pError;
 	m_ButtonRender = true;
 
-	this->CClient::StartVideo(NULL, this, pVideoName);
+	this->CClient::StartVideo(NULL, this, pVideoName, VStorageType);
 	m_DemoPlayer.Play();
 	m_DemoPlayer.SetSpeed(g_aSpeeds[SpeedIndex]);
 	//m_pConsole->Print(IConsole::OUTPUT_LEVEL_DEBUG, "demo_recorder", "demo eof");

@@ -54,7 +54,7 @@ typedef struct OutputStream {
 class CVideo : public IVideo
 {
 public:
-	CVideo(class CGraphics_Threaded* pGraphics, class IStorage* pStorage, class IConsole *pConsole, int width, int height, const char *name);
+	CVideo(class CGraphics_Threaded* pGraphics, class IStorage* pStorage, int StorageType, class IConsole *pConsole, int width, int height, const char *name);
 	~CVideo();
 
 	virtual void start();
@@ -94,6 +94,7 @@ private:
 	class IStorage* m_pStorage;
 	class IConsole* m_pConsole;
 
+	int m_StorageType;
 	int m_Width;
 	int m_Height;
 	char m_Name[256];

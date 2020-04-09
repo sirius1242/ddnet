@@ -703,6 +703,7 @@ int CDemoPlayer::Load(class IStorage *pStorage, class IConsole *pConsole, const 
 {
 	m_pConsole = pConsole;
 	m_File = pStorage->OpenFile(pFilename, IOFLAG_READ, StorageType);
+	dbg_msg("demo_render", "opening demo file: %s", pFilename);
 	if(!m_File)
 	{
 		if(m_pConsole)
