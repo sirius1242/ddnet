@@ -1,4 +1,4 @@
-[![DDraceNetwork](https://ddnet.tw/ddnet-small.png)](https://ddnet.tw) ![](https://github.com/ddnet/ddnet/workflows/Build/badge.svg)
+[![DDraceNetwork](https://ddnet.tw/ddnet-small.png)](https://ddnet.tw) [![](https://github.com/ddnet/ddnet/workflows/Build/badge.svg)](https://github.com/ddnet/ddnet/actions?query=workflow%3ABuild+event%3Apush+branch%3Amaster)
 
 Our own flavor of DDRace, a Teeworlds mod. See the [website](https://ddnet.tw) for more information.
 
@@ -39,11 +39,11 @@ Pass the number of threads for compilation to `make -j`. `$(nproc)` in this case
 
 You can install the required libraries on your system, `touch CMakeLists.txt` and CMake will use the system-wide libraries by default. You can install all required dependencies and CMake on Debian or Ubuntu like this:
 
-    sudo apt install cmake git libcurl4-openssl-dev libssl-dev libfreetype6-dev libglew-dev libogg-dev libopus-dev libopusfile-dev libpnglite-dev libsdl2-dev libwavpack-dev python
+    sudo apt install cmake git libcurl4-openssl-dev libssl-dev libfreetype6-dev libglew-dev libnotify-dev libogg-dev libopus-dev libopusfile-dev libpnglite-dev libsdl2-dev libwavpack-dev python
 
 Or on Arch Linux like this:
 
-    sudo pacman -S --needed base-devel cmake curl freetype2 git glew opusfile python sdl2 wavpack
+    sudo pacman -S --needed base-devel cmake curl freetype2 git glew libnotify opusfile python sdl2 wavpack
 
 There is an [AUR package for pnglite](https://aur.archlinux.org/packages/pnglite/). For instructions on installing it, see [AUR packages installation instructions on ArchWiki](https://wiki.archlinux.org/index.php/Arch_User_Repository#Installing_packages).
 

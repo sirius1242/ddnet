@@ -6,6 +6,7 @@ jobs:
   build-cmake:
     runs-on: ${{ matrix.os }}
     strategy:
+      fail-fast: false
       matrix:
         os: [ubuntu-latest, macOS-latest, windows-latest, ubuntu-16.04]
         include:
@@ -51,13 +52,14 @@ jobs:
       if: contains(matrix.os, 'ubuntu')
       run: |
         sudo apt-get update -y
-        sudo apt-get install pkg-config cmake libfreetype6-dev libsdl2-dev -y
+        sudo apt-get install pkg-config cmake libfreetype6-dev libnotify-dev libsdl2-dev -y
 
     - name: Prepare MacOS
       if: contains(matrix.os, 'macOS')
       run: |
         brew update
         brew install pkg-config freetype sdl2
+        sudo rm -rf /Library/Developer/CommandLineTools
 
     - name: Build in debug mode
       env: ${{ matrix.env }}
