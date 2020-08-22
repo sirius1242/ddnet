@@ -153,10 +153,12 @@ void CInput::SetIMEState(bool Activate)
 	else
 	{
 		if(m_CountEditingText == 0)
-			return;
-		m_CountEditingText--;
-		if(m_CountEditingText == 0)
+		{
 			SDL_StopTextInput();
+		//if(m_CountEditingText == 0)
+			return;
+		}
+		m_CountEditingText--;
 	}
 }
 
